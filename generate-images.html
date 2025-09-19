@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revolutionary Image Generator</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #F5F5DC;
+            padding: 20px;
+        }
+        .generator {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        canvas {
+            border: 3px solid #2F5233;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .section {
+            margin: 30px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 4px solid #8B0000;
+        }
+        h1 { color: #8B0000; text-align: center; }
+        h2 { color: #2F5233; }
+        .download-btn {
+            background: linear-gradient(135deg, #8B0000, #a00000);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-family: inherit;
+        }
+        .download-btn:hover { background: linear-gradient(135deg, #a00000, #8B0000); }
+    </style>
+</head>
+<body>
+    <div class="generator">
+        <h1>Revolutionary Portfolio Image Generator</h1>
+        <p style="text-align: center; color: #666; font-style: italic;">Generating themed placeholder images for the Revolutionary War portfolio</p>
+        
+        <div class="section">
+            <h2>Hero Images</h2>
+            <canvas id="hero-revolutionary" width="800" height="500"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('hero-revolutionary', 'hero-revolutionary.jpg')">Download Hero Image</button>
+        </div>
+
+        <div class="section">
+            <h2>About Portrait</h2>
+            <canvas id="about-portrait" width="400" height="500"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('about-portrait', 'about-portrait.jpg')">Download Portrait</button>
+        </div>
+
+        <div class="section">
+            <h2>Portfolio Images</h2>
+            <canvas id="portfolio-1" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-1', 'portfolio-1.jpg')">Download</button>
+            <canvas id="portfolio-2" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-2', 'portfolio-2.jpg')">Download</button>
+            <canvas id="portfolio-3" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-3', 'portfolio-3.jpg')">Download</button>
+            <canvas id="portfolio-4" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-4', 'portfolio-4.jpg')">Download</button>
+            <canvas id="portfolio-5" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-5', 'portfolio-5.jpg')">Download</button>
+            <canvas id="portfolio-6" width="400" height="300"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('portfolio-6', 'portfolio-6.jpg')">Download</button>
+        </div>
+
+        <div class="section">
+            <h2>Service Images</h2>
+            <canvas id="service-portrait" width="400" height="280"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('service-portrait', 'service-portrait.jpg')">Download</button>
+            <canvas id="service-event" width="400" height="280"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('service-event', 'service-event.jpg')">Download</button>
+            <canvas id="service-sports" width="400" height="280"></canvas>
+            <button class="download-btn" onclick="downloadCanvas('service-sports', 'service-sports.jpg')">Download</button>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <button class="download-btn" onclick="generateAllImages()" style="font-size: 16px; padding: 12px 24px;">Generate All Images</button>
+        </div>
+    </div>
+
+    <script>
+        // Revolutionary War color palette
+        const colors = {
+            revolutionaryRed: '#8B0000',
+            colonialGreen: '#2F5233',
+            darkGreen: '#1a2d1c',
+            parchment: '#F5F5DC',
+            darkBrown: '#3C2414',
+            gold: '#DAA520',
+            navy: '#191970',
+            cream: '#FFFDD0'
+        };
+
+        function createGradientBackground(ctx, width, height, color1, color2) {
+            const gradient = ctx.createLinearGradient(0, 0, width, height);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+        }
+
+        function drawFlag(ctx, x, y, width, height) {
+            // Revolutionary flag stripes
+            const stripeHeight = height / 13;
+            for (let i = 0; i < 13; i++) {
+                ctx.fillStyle = i % 2 === 0 ? colors.revolutionaryRed : colors.cream;
+                ctx.fillRect(x, y + i * stripeHeight, width, stripeHeight);
+            }
+            
+            // Blue canton
+            ctx.fillStyle = colors.navy;
+            ctx.fillRect(x, y, width * 0.4, height * 0.54);
+            
+            // Stars (simplified)
+            ctx.fillStyle = colors.cream;
+            for (let i = 0; i < 13; i++) {
+                const starX = x + 15 + (i % 4) * 25;
+                const starY = y + 15 + Math.floor(i / 4) * 25;
+                drawStar(ctx, starX, starY, 8);
+            }
+        }
+
+        function drawStar(ctx, x, y, radius) {
+            ctx.beginPath();
+            for (let i = 0; i < 5; i++) {
+                const angle = (i * 144 - 90) * Math.PI / 180;
+                const px = x + Math.cos(angle) * radius;
+                const py = y + Math.sin(angle) * radius;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+
+        function drawCannon(ctx, x, y, scale = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            
+            // Cannon barrel
+            ctx.fillStyle = colors.darkBrown;
+            ctx.fillRect(-40, -8, 80, 16);
+            
+            // Wheel
+            ctx.beginPath();
+            ctx.arc(-30, 20, 15, 0, 2 * Math.PI);
+            ctx.fillStyle = colors.darkBrown;
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawTree(ctx, x, y, scale = 1) {
+            ctx.save();
+            ctx.translate(x, y);
+            ctx.scale(scale, scale);
+            
+            // Trunk
+            ctx.fillStyle = colors.darkBrown;
+            ctx.fillRect(-5, 0, 10, 40);
+            
+            // Foliage
+            ctx.beginPath();
+            ctx.arc(0, -20, 25, 0, 2 * Math.PI);
+            ctx.fillStyle = colors.colonialGreen;
+            ctx.fill();
+            
+            ctx.restore();
+        }
+
+        function drawBuilding(ctx, x, y, width, height) {
+            // Building base
+            ctx.fillStyle = colors.parchment;
+            ctx.fillRect(x, y, width, height);
+            
+            // Roof
+            ctx.fillStyle = colors.revolutionaryRed;
+            ctx.beginPath();
+            ctx.moveTo(x - 10, y);
+            ctx.lineTo(x + width/2, y - 30);
+            ctx.lineTo(x + width + 10, y);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Windows
+            ctx.fillStyle = colors.navy;
+            ctx.fillRect(x + 20, y + 20, 15, 20);
+            ctx.fillRect(x + width - 35, y + 20, 15, 20);
+            
+            // Door
+            ctx.fillStyle = colors.darkBrown;
+            ctx.fillRect(x + width/2 - 10, y + 30, 20, 30);
+        }
+
+        function addText(ctx, text, x, y, fontSize = 24, color = colors.revolutionaryRed, font = 'serif') {
+            ctx.fillStyle = color;
+            ctx.font = `bold ${fontSize}px ${font}`;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+        }
+
+        function addSubText(ctx, text, x, y, fontSize = 16, color = colors.colonialGreen) {
+            ctx.fillStyle = color;
+            ctx.font = `${fontSize}px serif`;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+        }
+
+        // Generate Hero Image
+        function generateHeroImage() {
+            const canvas = document.getElementById('hero-revolutionary');
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            createGradientBackground(ctx, 800, 500, colors.parchment, '#E8E8D0');
+            
+            // Revolutionary scene
+            drawTree(ctx, 100, 400, 1.5);
+            drawTree(ctx, 700, 450, 1.2);
+            drawBuilding(ctx, 200, 350, 100, 80);
+            drawBuilding(ctx, 350, 330, 120, 100);
+            drawCannon(ctx, 500, 400, 1.5);
+            
+            // Flag
+            drawFlag(ctx, 600, 100, 120, 80);
+            
+            // Title overlay
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+            ctx.fillRect(0, 200, 800, 100);
+            
+            addText(ctx, 'The Spirit of Liberty', 400, 235, 36, colors.cream);
+            addSubText(ctx, 'Revolutionary Photography by Michael Potash', 400, 270, 18, colors.parchment);
+        }
+
+        // Generate About Portrait
+        function generateAboutPortrait() {
+            const canvas = document.getElementById('about-portrait');
+            const ctx = canvas.getContext('2d');
+            
+            // Background
+            createGradientBackground(ctx, 400, 500, colors.darkGreen, colors.colonialGreen);
+            
+            // Portrait frame effect
+            ctx.fillStyle = colors.gold;
+            ctx.fillRect(50, 80, 300, 340);
+            ctx.fillStyle = colors.parchment;
+            ctx.fillRect(70, 100, 260, 300);
+            
+            // Silhouette
+            ctx.fillStyle = colors.darkBrown;
+            ctx.beginPath();
+            ctx.arc(200, 200, 80, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Hat (tricorn)
+            ctx.beginPath();
+            ctx.moveTo(150, 150);
+            ctx.lineTo(200, 120);
+            ctx.lineTo(250, 150);
+            ctx.lineTo(200, 170);
+            ctx.closePath();
+            ctx.fill();
+            
+            // Text
+            addText(ctx, 'Michael Potash', 200, 450, 24, colors.cream);
+            addSubText(ctx, 'Visual Documentarian', 200, 480, 16, colors.parchment);
+        }
+
+        // Generate Portfolio Images
+        function generatePortfolioImages() {
+            // Portfolio 1 - Portrait of Patriots
+            const p1 = document.getElementById('portfolio-1');
+            const ctx1 = p1.getContext('2d');
+            createGradientBackground(ctx1, 400, 300, colors.revolutionaryRed, '#A00000');
+            
+            // Multiple silhouettes
+            for (let i = 0; i < 3; i++) {
+                ctx1.fillStyle = 'rgba(0, 0, 0, 0.7)';
+                ctx1.beginPath();
+                ctx1.arc(100 + i * 100, 150, 40, 0, 2 * Math.PI);
+                ctx1.fill();
+            }
+            
+            addText(ctx1, 'Portrait of Patriots', 200, 50, 20, colors.cream);
+            addSubText(ctx1, 'Contemporary Revolutionary Portraits', 200, 280, 14, colors.parchment);
+
+            // Portfolio 2 - Moments of Defiance
+            const p2 = document.getElementById('portfolio-2');
+            const ctx2 = p2.getContext('2d');
+            createGradientBackground(ctx2, 400, 300, colors.colonialGreen, colors.darkGreen);
+            
+            drawFlag(ctx2, 150, 100, 100, 65);
+            addText(ctx2, 'Moments of Defiance', 200, 50, 20, colors.cream);
+            addSubText(ctx2, 'Revolutionary Events Captured', 200, 280, 14, colors.parchment);
+
+            // Portfolio 3 - Athletic Valor
+            const p3 = document.getElementById('portfolio-3');
+            const ctx3 = p3.getContext('2d');
+            createGradientBackground(ctx3, 400, 300, colors.navy, '#000080');
+            
+            // Sports figure silhouette
+            ctx3.fillStyle = colors.cream;
+            ctx3.beginPath();
+            ctx3.arc(200, 120, 30, 0, 2 * Math.PI);
+            ctx3.fill();
+            
+            ctx3.fillRect(180, 150, 40, 80);
+            ctx3.fillRect(160, 180, 80, 15);
+            
+            addText(ctx3, 'Athletic Valor', 200, 50, 20, colors.cream);
+            addSubText(ctx3, 'The Competitive Spirit', 200, 280, 14, colors.parchment);
+
+            // Portfolio 4 - Grounds of Liberty
+            const p4 = document.getElementById('portfolio-4');
+            const ctx4 = p4.getContext('2d');
+            createGradientBackground(ctx4, 400, 300, colors.parchment, '#D0D0B0');
+            
+            drawBuilding(ctx4, 100, 150, 80, 60);
+            drawBuilding(ctx4, 220, 130, 100, 80);
+            drawTree(ctx4, 50, 200, 0.8);
+            drawTree(ctx4, 350, 210, 0.9);
+            
+            addText(ctx4, 'Grounds of Liberty', 200, 50, 20, colors.revolutionaryRed);
+            addSubText(ctx4, 'Historic Locations', 200, 280, 14, colors.colonialGreen);
+
+            // Portfolio 5 - Gatherings of the Free
+            const p5 = document.getElementById('portfolio-5');
+            const ctx5 = p5.getContext('2d');
+            createGradientBackground(ctx5, 400, 300, colors.gold, '#B8860B');
+            
+            // Crowd silhouettes
+            for (let i = 0; i < 6; i++) {
+                ctx5.fillStyle = 'rgba(47, 82, 51, 0.8)';
+                ctx5.fillRect(50 + i * 50, 180, 30, 60);
+                ctx5.beginPath();
+                ctx5.arc(65 + i * 50, 170, 15, 0, 2 * Math.PI);
+                ctx5.fill();
+            }
+            
+            addText(ctx5, 'Gatherings of the Free', 200, 50, 20, colors.revolutionaryRed);
+            addSubText(ctx5, 'Community & Civic Events', 200, 280, 14, colors.darkGreen);
+
+            // Portfolio 6 - Freedom's Legacy
+            const p6 = document.getElementById('portfolio-6');
+            const ctx6 = p6.getContext('2d');
+            createGradientBackground(ctx6, 400, 300, colors.darkBrown, '#2C1810');
+            
+            // Liberty bell silhouette
+            ctx6.fillStyle = colors.gold;
+            ctx6.beginPath();
+            ctx6.arc(200, 180, 60, 0, Math.PI);
+            ctx6.fill();
+            ctx6.fillRect(190, 120, 20, 60);
+            
+            // Crack
+            ctx6.strokeStyle = colors.darkBrown;
+            ctx6.lineWidth = 3;
+            ctx6.beginPath();
+            ctx6.moveTo(220, 160);
+            ctx6.lineTo(230, 200);
+            ctx6.stroke();
+            
+            addText(ctx6, 'Freedom\'s Legacy', 200, 50, 20, colors.cream);
+            addSubText(ctx6, 'Documentary Heritage Work', 200, 280, 14, colors.parchment);
+        }
+
+        // Generate Service Images
+        function generateServiceImages() {
+            // Service Portrait
+            const sp = document.getElementById('service-portrait');
+            const ctxSP = sp.getContext('2d');
+            createGradientBackground(ctxSP, 400, 280, colors.parchment, colors.cream);
+            
+            // Camera silhouette
+            ctxSP.fillStyle = colors.colonialGreen;
+            ctxSP.fillRect(150, 100, 100, 60);
+            ctxSP.beginPath();
+            ctxSP.arc(200, 130, 30, 0, 2 * Math.PI);
+            ctxSP.fill();
+            
+            addText(ctxSP, 'Patriotic Portraiture', 200, 50, 18, colors.revolutionaryRed);
+            addSubText(ctxSP, 'Professional Portrait Sessions', 200, 250, 14, colors.colonialGreen);
+
+            // Service Event
+            const se = document.getElementById('service-event');
+            const ctxSE = se.getContext('2d');
+            createGradientBackground(ctxSE, 400, 280, colors.revolutionaryRed, '#A00000');
+            
+            // Event scene
+            drawBuilding(ctxSE, 50, 150, 60, 50);
+            drawBuilding(ctxSE, 140, 140, 80, 60);
+            drawBuilding(ctxSE, 250, 160, 70, 40);
+            
+            // Fireworks
+            for (let i = 0; i < 5; i++) {
+                ctxSE.strokeStyle = colors.gold;
+                ctxSE.lineWidth = 2;
+                ctxSE.beginPath();
+                ctxSE.moveTo(100 + i * 50, 80);
+                for (let j = 0; j < 8; j++) {
+                    const angle = (j * 45) * Math.PI / 180;
+                    ctxSE.lineTo(100 + i * 50 + Math.cos(angle) * 15, 80 + Math.sin(angle) * 15);
+                    ctxSE.moveTo(100 + i * 50, 80);
+                }
+                ctxSE.stroke();
+            }
+            
+            addText(ctxSE, 'Revolutionary Events', 200, 40, 18, colors.cream);
+            addSubText(ctxSE, 'Civic Gatherings & Celebrations', 200, 250, 14, colors.parchment);
+
+            // Service Sports
+            const ss = document.getElementById('service-sports');
+            const ctxSS = ss.getContext('2d');
+            createGradientBackground(ctxSS, 400, 280, colors.colonialGreen, colors.darkGreen);
+            
+            // Sports field
+            ctxSS.fillStyle = colors.cream;
+            ctxSS.fillRect(50, 150, 300, 100);
+            
+            // Field lines
+            ctxSS.strokeStyle = colors.colonialGreen;
+            ctxSS.lineWidth = 2;
+            ctxSS.beginPath();
+            ctxSS.moveTo(200, 150);
+            ctxSS.lineTo(200, 250);
+            ctxSS.moveTo(50, 200);
+            ctxSS.lineTo(350, 200);
+            ctxSS.stroke();
+            
+            // Players
+            for (let i = 0; i < 4; i++) {
+                ctxSS.fillStyle = i % 2 === 0 ? colors.revolutionaryRed : colors.navy;
+                ctxSS.beginPath();
+                ctxSS.arc(100 + i * 50, 180, 10, 0, 2 * Math.PI);
+                ctxSS.fill();
+                ctxSS.fillRect(95 + i * 50, 190, 10, 20);
+            }
+            
+            addText(ctxSS, 'Athletic Warfare', 200, 40, 18, colors.cream);
+            addSubText(ctxSS, 'Competitive Sports Photography', 200, 260, 14, colors.parchment);
+        }
+
+        function generateAllImages() {
+            generateHeroImage();
+            generateAboutPortrait();
+            generatePortfolioImages();
+            generateServiceImages();
+            
+            setTimeout(() => {
+                alert('All Revolutionary War themed images have been generated! Use the download buttons to save them individually, then place them in your portfolio folder.');
+            }, 500);
+        }
+
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/jpeg', 0.9);
+            link.click();
+        }
+
+        // Auto-generate images when page loads
+        window.addEventListener('load', generateAllImages);
+    </script>
+</body>
+</html>
