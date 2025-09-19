@@ -263,6 +263,132 @@ h3 {
     background-color: var(--white);
 }
 
+/* Memorial Section */
+.memorial {
+    padding: 6rem 0;
+    background: linear-gradient(135deg, var(--parchment) 0%, #e0e0c8 100%);
+    position: relative;
+}
+
+.memorial::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 25% 75%, rgba(47, 82, 51, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 25%, rgba(139, 0, 0, 0.03) 0%, transparent 50%);
+    z-index: 1;
+}
+
+.memorial .container {
+    position: relative;
+    z-index: 2;
+}
+
+.memorial-content {
+    margin-bottom: 4rem;
+    text-align: center;
+}
+
+.memorial-text h3 {
+    color: var(--colonial-green);
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.memorial-subtitle {
+    color: var(--revolutionary-red);
+    font-size: 1.2rem;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+}
+
+.memorial-text p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--dark-gray);
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.memorial-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.memorial-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    background-color: var(--white);
+}
+
+.memorial-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-heavy);
+}
+
+.memorial-item img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.memorial-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(47, 82, 51, 0.9));
+    color: var(--white);
+    padding: 2rem 1.5rem 1.5rem;
+    transform: translateY(100%);
+    transition: var(--transition);
+}
+
+.memorial-item:hover .memorial-overlay {
+    transform: translateY(0);
+}
+
+.memorial-item:hover img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.memorial-overlay h4 {
+    color: var(--parchment);
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-display);
+}
+
+.memorial-overlay p {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    line-height: 1.4;
+}
+
+/* Memorial responsive design */
+@media (max-width: 768px) {
+    .memorial-gallery {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .memorial-item img {
+        height: 200px;
+    }
+}
+
 .about-content {
     display: grid;
     grid-template-columns: 2fr 1fr;
