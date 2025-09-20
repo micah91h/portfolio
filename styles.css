@@ -128,7 +128,7 @@ h3 {
 }
 
 .mobile-menu-toggle {
-    display: none;
+    display: flex;
     flex-direction: column;
     cursor: pointer;
     gap: 4px;
