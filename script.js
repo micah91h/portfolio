@@ -236,54 +236,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Add CSS for mobile menu
-const mobileMenuCSS = `
-    @media (max-width: 768px) {
-        .nav-links {
-            position: fixed;
-            top: 70px;
-            right: -100%;
-            width: 100%;
-            height: calc(100vh - 70px);
-            background: linear-gradient(135deg, var(--colonial-green) 0%, var(--dark-green) 100%);
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            padding-top: 2rem;
-            transition: right 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .nav-links.mobile-active {
-            right: 0;
-        }
-        
-        .nav-links a {
-            padding: 1rem 2rem;
-            font-size: 1.2rem;
-            width: 100%;
-            text-align: center;
-            border-bottom: 1px solid rgba(245, 245, 220, 0.1);
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(1) {
-            transform: rotate(-45deg) translate(-5px, 6px);
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(2) {
-            opacity: 0;
-        }
-        
-        .mobile-menu-toggle.active span:nth-child(3) {
-            transform: rotate(45deg) translate(-5px, -6px);
-        }
-    }
-`;
-
-// Inject mobile menu CSS
-const style = document.createElement('style');
-style.textContent = mobileMenuCSS;
-document.head.appendChild(style);
 
 // Parallax effect for hero section
 window.addEventListener('scroll', function() {
