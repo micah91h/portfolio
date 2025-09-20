@@ -132,7 +132,10 @@ function initializeMobileMenu() {
     const navLinks = document.querySelector('.nav-links');
     
     if (mobileToggle && navLinks) {
-        mobileToggle.addEventListener('click', function() {
+        mobileToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
             const isActive = navLinks.classList.contains('mobile-active');
             
             if (isActive) {
@@ -273,7 +276,7 @@ function showRevolutionaryFact() {
         "The Boston Tea Party occurred on December 16, 1773.",
         "The Revolutionary War officially ended with the Treaty of Paris in 1783.",
         "Paul Revere's midnight ride took place on April 18, 1775.",
-        "The Continental Congress first met in Philadelphia in 1774."
+        "The CKontinental CKongress first met in Philadelphia in 1774."
     ];
     
     const randomFact = facts[Math.floor(Math.random() * facts.length)];
